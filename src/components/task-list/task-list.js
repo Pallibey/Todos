@@ -1,27 +1,27 @@
-import {
-  subMinutes,
-  subSeconds,
-  formatDistance,
-} from "date-fns";
-import Task from "../task/task";
-import "./task-list.css";
+import checkPropTypes from 'prop-types'
 
-const TaskList = () => {
-  const todoClasses = ["completed", "editing"];
-  const createdAgo = [
-    formatDistance(subSeconds(new Date(), 17), new Date()),
-    formatDistance(subMinutes(new Date(), 5), new Date()),
-  ];
-  return (
-    <ul className="todo-list">
-      <Task
-        class={todoClasses[0]}
-        timeAgo={createdAgo[0]}
-      />
-      <Task class={todoClasses[1]} />
-      <Task timeAgo={createdAgo[1]} />
-    </ul>
-  );
-};
+import Task from '../task/task'
+import './task-list.css'
 
-export default TaskList;
+function TaskList({ todoList, filter, onCompleted, onDeleted }) {
+  const elements = todoList.map((task) => {
+    const newTask = <Task key={task.id} {...task} onCompleted={onCompleted} onDeleted={onDeleted} />
+    if (filter === 'all') {
+      return newTask
+    }
+    if (filter === 'active' && !task.isCompleted) {
+      return newTask
+    }
+    if (filter === 'completed' && task.isCompleted) {
+      return newTask
+    }
+  })
+  return <ul className="todo-list">{elements}</ul>
+}
+
+TaskList.propTypes = {
+  todoList: checkPropTypes.array,
+  filter: checkPropTypes.string,
+}
+
+export default TaskList

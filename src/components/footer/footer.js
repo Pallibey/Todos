@@ -1,16 +1,36 @@
-import TasksFilter from "../tasks-filter/tasks-filter";
-import "./footer.css";
+import checkPropTypes from 'prop-types'
 
-const Footer = () => {
+import TasksFilter from '../tasks-filter/tasks-filter'
+import './footer.css'
+
+function Footer({ todoList, onFiltered, onDeleted }) {
   return (
     <footer className="footer">
-      <span className="todo-count">1 items left</span>
-      <TasksFilter />
-      <button className="clear-completed">
+      <span className="todo-count">{`${todoList.reduce((acc, task) => acc + !task.isCompleted, 0)} items left`}</span>
+      <TasksFilter onFiltered={onFiltered} />
+      <button
+        onClick={() => {
+          todoList.forEach((task) => {
+            if (task.isCompleted) {
+              onDeleted(task.id)
+            }
+          })
+        }}
+        className="clear-completed"
+      >
         Clear completed
       </button>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+Footer.propTypes = {
+  todoList: checkPropTypes.arrayOf(
+    checkPropTypes.shape({
+      isCompleted: checkPropTypes.bool,
+    })
+  ),
+  onDeleted: checkPropTypes.func.isRequired,
+}
+
+export default Footer
