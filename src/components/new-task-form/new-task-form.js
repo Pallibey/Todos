@@ -7,6 +7,10 @@ export default class NewTaskForm extends React.Component {
     label: '',
   }
 
+  static defaultProps = {
+    addNewItem: () => {},
+  }
+
   static propTypes = {
     addNewItem: checkPropTypes.func.isRequired,
   }
@@ -17,8 +21,10 @@ export default class NewTaskForm extends React.Component {
 
   onSubmit = (e) => {
     e.preventDefault()
-    this.props.addNewItem(this.state.label)
-    this.setState({ label: '' })
+    if (this.state.label.match(/\S/)) {
+      this.props.addNewItem(this.state.label)
+      this.setState({ label: '' })
+    }
   }
 
   render() {
