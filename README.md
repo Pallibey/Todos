@@ -1,3 +1,3 @@
 В неиспользованных файлах info.css и toggle-all.css стили, которые были в тестовом css файле, но не использовались как классы элементов в разметке
 
-[Сайт задания](https://pallibey.github.io/Todos/)
+[Сайт задания](https://todos-beige-eight.vercel.app/)
