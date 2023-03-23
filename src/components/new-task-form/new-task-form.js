@@ -21,10 +21,8 @@ export default class NewTaskForm extends React.Component {
 
   onSubmit = (e) => {
     e.preventDefault()
-    if (this.state.label.match(/\S/)) {
-      this.props.addNewItem(this.state.label)
-      this.setState({ label: '' })
-    }
+    this.props.addNewItem(this.state.label)
+    this.setState({ label: '' })
   }
 
   render() {
@@ -36,8 +34,9 @@ export default class NewTaskForm extends React.Component {
             className="new-todo"
             placeholder="What needs to be done?"
             onChange={this.onChange}
-            value={this.state.label}
+            value={this.state.label.trimStart()}
             autoFocus
+            required
           />
         </form>
       </header>
