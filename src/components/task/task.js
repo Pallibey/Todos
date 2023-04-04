@@ -5,11 +5,6 @@ import { formatDistanceToNow } from 'date-fns'
 import './task.css'
 
 export default class Task extends React.Component {
-  state = {
-    isEditing: false,
-    label: this.props.label,
-  }
-
   static defaultProps = {
     label: '',
     isCompleted: false,
@@ -24,6 +19,23 @@ export default class Task extends React.Component {
     isCompleted: checkPropTypes.bool,
     onDeleted: checkPropTypes.func.isRequired,
     onCompleted: checkPropTypes.func.isRequired,
+  }
+
+  state = {
+    isEditing: false,
+    label: '',
+    timer: [0, 0],
+    timerID: 0,
+  }
+
+  componentDidMount() {
+    this.setState({ label: this.props.label, timer: this.props.timer })
+  }
+
+  componentWillUnmount() {
+    if (this.state.timerID !== 0) {
+      clearInterval(this.state.timerID)
+    }
   }
 
   onEditing = () => {
@@ -43,8 +55,32 @@ export default class Task extends React.Component {
     this.onEditing()
   }
 
+  timerStart = () => {
+    this.setState({
+      timerID: setInterval(() => {
+        this.setState((state) => {
+          let min = state.timer[0]
+          let sec = state.timer[1]
+          if (sec < 59) {
+            return { timer: [min, ++sec] }
+          } else {
+            return { timer: [++min, 0] }
+          }
+        })
+      }, 1000),
+    })
+  }
+
+  timerPause = () => {
+    if (this.state.timerID !== 0) {
+      clearInterval(this.state.timerID)
+      this.setState({ timerID: 0 })
+    }
+  }
+
   render() {
     const { id, created, isCompleted, onCompleted, onDeleted } = this.props
+    let timer = this.state.timer
     let liClassNames = className({ active: !isCompleted, completed: isCompleted })
     let taskView
     if (this.state.isEditing) {
@@ -67,8 +103,13 @@ export default class Task extends React.Component {
               checked={isCompleted}
             />
             <label htmlFor={id}>
-              <span className="description">{this.state.label}</span>
-              <span className="created">
+              <span className="title">{this.state.label}</span>
+              <span className="description">
+                <button onClick={this.timerStart} className="icon icon-play"></button>
+                <button onClick={this.timerPause} className="icon icon-pause"></button>
+                {timer[1] < 10 ? `${timer[0]}:0${timer[1]}` : `${timer[0]}:${timer[1]}`}
+              </span>
+              <span className="description">
                 {formatDistanceToNow(created, {
                   includeSeconds: true,
                   addSuffix: true,

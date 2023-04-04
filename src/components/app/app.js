@@ -14,18 +14,21 @@ export default class App extends React.Component {
         isCompleted: true,
         created: new Date(),
         id: 1,
+        timer: [0, 0],
       },
       {
         label: 'Editing task',
         isCompleted: false,
         created: new Date(),
         id: 2,
+        timer: [0, 0],
       },
       {
         label: 'Active task',
         isCompleted: false,
         created: new Date(),
         id: 3,
+        timer: [0, 0],
       },
     ],
     filter: 'all',
@@ -33,7 +36,7 @@ export default class App extends React.Component {
 
   itemsID = 4
 
-  addNewItem = (label) => {
+  addNewItem = (label, min, sec) => {
     this.setState(({ tasksData }) => {
       const newItem = {
         label: label,
@@ -41,6 +44,7 @@ export default class App extends React.Component {
         isEditing: false,
         created: new Date(),
         id: this.itemsID++,
+        timer: [min, sec],
       }
       return {
         tasksData: [...tasksData, newItem],
