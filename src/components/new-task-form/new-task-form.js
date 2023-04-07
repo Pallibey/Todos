@@ -22,36 +22,24 @@ export default class NewTaskForm extends React.Component {
   }
 
   onChangeMin = (e) => {
-    const text = e.target.value
-
-    if ((text.match(/^\d+$/) && text.length < 3) || text === '') {
-      this.setState({ min: text })
-    }
+    this.setState({ min: e.target.value })
   }
 
   onChangeSec = (e) => {
-    const text = e.target.value
-    let conditions = text.match(/^\d+$/) && text.length < 3
-    if (conditions || text === '') {
-      this.setState({ sec: text })
-    }
+    this.setState({ sec: e.target.value })
   }
 
   onSubmit = (e) => {
     e.preventDefault()
-    if (Number(this.state.sec) > 59) {
-      alert('Введите корректное количество секунд (до 60)')
-    } else {
-      this.props.addNewItem(this.state.label, this.state.min, this.state.sec)
-      this.setState({ label: '', min: 0, sec: 0 })
-    }
+    this.props.addNewItem(this.state.label, this.state.min, this.state.sec)
+    this.setState({ label: '', min: 0, sec: 0 })
   }
 
   render() {
     return (
       <header className="header">
         <h1>todos</h1>
-        <form onSubmit={this.onSubmit}>
+        <form className="new-todo-form" onSubmit={this.onSubmit}>
           <input
             className="new-todo"
             placeholder="What needs to be done?"
@@ -62,6 +50,8 @@ export default class NewTaskForm extends React.Component {
           />
           <input
             className="new-todo-form__timer"
+            type="number"
+            max={99}
             placeholder="Min"
             value={this.state.min === 0 ? '' : this.state.min}
             onChange={this.onChangeMin}
@@ -69,6 +59,8 @@ export default class NewTaskForm extends React.Component {
           />
           <input
             className="new-todo-form__timer"
+            type="number"
+            max={59}
             placeholder="Sec"
             value={this.state.sec === 0 ? '' : this.state.sec}
             onChange={this.onChangeSec}

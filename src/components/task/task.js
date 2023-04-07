@@ -23,18 +23,16 @@ export default class Task extends React.Component {
 
   state = {
     isEditing: false,
-    label: '',
-    timer: [0, 0],
     timerID: 0,
   }
 
-  componentDidMount() {
-    this.setState({ label: this.props.label, timer: this.props.timer })
+  componentWillUnmount() {
+    this.clearTimerInterval()
   }
 
-  componentWillUnmount() {
-    if (this.state.timerID !== 0) {
-      clearInterval(this.state.timerID)
+  componentDidUpdate(prevProps) {
+    if (this.props.timer !== prevProps.timer && this.props.timer[0] === 0 && this.props.timer[1] === 0) {
+      this.clearTimerInterval()
     }
   }
 
@@ -47,7 +45,7 @@ export default class Task extends React.Component {
   }
 
   onChange = (e) => {
-    this.setState({ label: e.target.value })
+    this.props.changeData(this.props.id, e.target.value)
   }
 
   onSubmitEditing = (e) => {
@@ -55,19 +53,30 @@ export default class Task extends React.Component {
     this.onEditing()
   }
 
+  clearTimerInterval = () => {
+    if (this.state.timerID !== 0) {
+      clearInterval(this.state.timerID)
+      this.setState({ timerID: 0 })
+    }
+  }
+
   timerStart = () => {
+    this.clearTimerInterval()
+    let timer = [0, 0]
+    let timerID = setInterval(() => {
+      let min = this.props.timer[0]
+      let sec = this.props.timer[1]
+      if (sec < 1 && min > 0) {
+        timer = [--min, 59]
+      } else if (sec < 2) {
+        timer = [0, 0]
+      } else {
+        timer = [min, --sec]
+      }
+      this.props.changeData(this.props.id, this.props.label, timer)
+    }, 1000)
     this.setState({
-      timerID: setInterval(() => {
-        this.setState((state) => {
-          let min = state.timer[0]
-          let sec = state.timer[1]
-          if (sec < 59) {
-            return { timer: [min, ++sec] }
-          } else {
-            return { timer: [++min, 0] }
-          }
-        })
-      }, 1000),
+      timerID: timerID,
     })
   }
 
@@ -79,14 +88,13 @@ export default class Task extends React.Component {
   }
 
   render() {
-    const { id, created, isCompleted, onCompleted, onDeleted } = this.props
-    let timer = this.state.timer
+    const { id, created, isCompleted, onCompleted, onDeleted, timer } = this.props
     let liClassNames = className({ active: !isCompleted, completed: isCompleted })
     let taskView
     if (this.state.isEditing) {
       taskView = (
         <form onSubmit={this.onSubmitEditing}>
-          <input type="text" className="edit" onChange={this.onChange} defaultValue={this.state.label}></input>
+          <input type="text" className="edit" onChange={this.onChange} defaultValue={this.props.label}></input>
         </form>
       )
     } else {
@@ -103,7 +111,7 @@ export default class Task extends React.Component {
               checked={isCompleted}
             />
             <label htmlFor={id}>
-              <span className="title">{this.state.label}</span>
+              <span className="title">{this.props.label}</span>
               <span className="description">
                 <button onClick={this.timerStart} className="icon icon-play"></button>
                 <button onClick={this.timerPause} className="icon icon-pause"></button>

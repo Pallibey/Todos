@@ -6,11 +6,13 @@ import './task-list.css'
 
 export default class TaskList extends React.Component {
   render() {
-    const { todoList, onCompleted, onDeleted, filter } = this.props
+    const { todoList, onCompleted, onDeleted, filter, changeData } = this.props
     return (
       <ul className="todo-list">
         {todoList.map((task) => {
-          const newTask = <Task key={task.id} {...task} onCompleted={onCompleted} onDeleted={onDeleted} />
+          const newTask = (
+            <Task key={task.id} {...task} onCompleted={onCompleted} onDeleted={onDeleted} changeData={changeData} />
+          )
           if (filter === 'all') {
             return newTask
           }

@@ -14,21 +14,21 @@ export default class App extends React.Component {
         isCompleted: true,
         created: new Date(),
         id: 1,
-        timer: [0, 0],
+        timer: [1, 0],
       },
       {
         label: 'Editing task',
         isCompleted: false,
         created: new Date(),
         id: 2,
-        timer: [0, 0],
+        timer: [0, 30],
       },
       {
         label: 'Active task',
         isCompleted: false,
         created: new Date(),
         id: 3,
-        timer: [0, 0],
+        timer: [0, 5],
       },
     ],
     filter: 'all',
@@ -48,6 +48,22 @@ export default class App extends React.Component {
       }
       return {
         tasksData: [...tasksData, newItem],
+      }
+    })
+  }
+
+  changeData = (id, label, timer = false) => {
+    this.setState(({ tasksData }) => {
+      return {
+        tasksData: tasksData.map((element) => {
+          if (element.id !== id) {
+            return element
+          } else if (!timer) {
+            console.log(label)
+            return { ...element, label: label }
+          }
+          return { ...element, label: label, timer: timer }
+        }),
       }
     })
   }
@@ -88,6 +104,7 @@ export default class App extends React.Component {
             filter={this.state.filter}
             onCompleted={this.onCompleted}
             onDeleted={this.onDeleted}
+            changeData={this.changeData}
           />
           <Footer todoList={this.state.tasksData} onDeleted={this.onDeleted} onFiltered={this.onFiltered} />
         </section>
