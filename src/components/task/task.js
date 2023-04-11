@@ -66,7 +66,7 @@ export default class Task extends React.Component {
     let timerID = setInterval(() => {
       let min = this.props.timer[0]
       let sec = this.props.timer[1]
-      if (sec < 1 && min > 0) {
+      if (sec < 2 && min > 0) {
         timer = [--min, 59]
       } else if (sec < 2) {
         timer = [0, 0]

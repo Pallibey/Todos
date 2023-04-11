@@ -31,7 +31,7 @@ export default class NewTaskForm extends React.Component {
 
   onSubmit = (e) => {
     e.preventDefault()
-    this.props.addNewItem(this.state.label, this.state.min, this.state.sec)
+    this.props.addNewItem(this.state.label, Number(this.state.min), Number(this.state.sec))
     this.setState({ label: '', min: 0, sec: 0 })
   }
 
