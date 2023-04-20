@@ -3,7 +3,7 @@ import checkPropTypes from 'prop-types'
 import TasksFilter from '../tasks-filter/tasks-filter'
 import './footer.css'
 
-function Footer({ todoList, onFiltered, onDeleted }) {
+const Footer = ({ todoList, onFiltered, onDeleted }) => {
   return (
     <footer className="footer">
       <span className="todo-count">{`${todoList.reduce((acc, task) => acc + !task.isCompleted, 0)} items left`}</span>

@@ -4,28 +4,26 @@ import React from 'react'
 import Task from '../task/task'
 import './task-list.css'
 
-export default class TaskList extends React.Component {
-  render() {
-    const { todoList, onCompleted, onDeleted, filter, changeData } = this.props
-    return (
-      <ul className="todo-list">
-        {todoList.map((task) => {
-          const newTask = (
-            <Task key={task.id} {...task} onCompleted={onCompleted} onDeleted={onDeleted} changeData={changeData} />
-          )
-          if (filter === 'all') {
-            return newTask
-          }
-          if (filter === 'active' && !task.isCompleted) {
-            return newTask
-          }
-          if (filter === 'completed' && task.isCompleted) {
-            return newTask
-          }
-        })}
-      </ul>
-    )
-  }
+const TaskList = (props) => {
+  const { todoList, onCompleted, onDeleted, filter, changeData } = props
+  return (
+    <ul className="todo-list">
+      {todoList.map((task) => {
+        const newTask = (
+          <Task key={task.id} {...task} onCompleted={onCompleted} onDeleted={onDeleted} changeData={changeData} />
+        )
+        if (filter === 'all') {
+          return newTask
+        }
+        if (filter === 'active' && !task.isCompleted) {
+          return newTask
+        }
+        if (filter === 'completed' && task.isCompleted) {
+          return newTask
+        }
+      })}
+    </ul>
+  )
 }
 
 TaskList.defaultProps = {
@@ -37,3 +35,5 @@ TaskList.propTypes = {
   todoList: checkPropTypes.array,
   filter: checkPropTypes.string,
 }
+
+export default TaskList
